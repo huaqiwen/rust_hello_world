@@ -1,4 +1,5 @@
 use std::ops::Deref;
+use std::rc::Rc;
 
 //-- Cons List (similar to Linked List)
 /*
@@ -31,6 +32,11 @@ impl<T> LinkedList<T> {
     }
 }
 
+struct LinkedListRC<T> {
+    value: T,
+    next: Option<Rc<LinkedListRC<T>>>,
+}
+
 pub fn run_linked_list_ex() {
     let ll1 = LinkedList {
         value: 1,
@@ -54,6 +60,27 @@ pub fn run_linked_list_ex() {
     };
     println!("ll1 = {:?}", ll1.values());
     println!("ll2 = {:?}", ll2.values());
+
+    let llrc_a = Rc::new(LinkedListRC {
+        value: 'a',
+        next: Some(Rc::new(LinkedListRC {
+            value: 'b',
+            next: None,
+        }))
+    });
+    println!("Reference count of <llrc_a> after creating a: {}", Rc::strong_count(&llrc_a));
+    let llrc_b = LinkedListRC{
+        value: 'z',
+        /*
+            Rc::clone doesn't make a deep copy of all the data like other clone() methods.
+            Rc::clone only increments the reference count.
+         */
+        next: Some(Rc::clone(&llrc_a)),
+    };
+    println!("Reference count of <llrc_a> after creating b: {}", Rc::strong_count(&llrc_a));
+    println!("llrc_b: {}, {}, {}", llrc_b.value,
+                                   llrc_b.next.as_ref().unwrap().value,
+                                   llrc_b.next.as_ref().unwrap().next.as_ref().unwrap().value);
 }
 
 pub fn run_my_box_ex() {
@@ -89,5 +116,11 @@ impl<T> Deref for MyBox<T> {
     // returns a reference to the value we want to access with the * operator
     fn deref(&self) -> &T {
         &self.0
+    }
+}
+
+impl<T> Drop for MyBox<T> {
+    fn drop(&mut self) {
+        println!("A MyBox is dropped.");
     }
 }
