@@ -26,6 +26,9 @@ pub mod chapter_thirteen;
 //--- Chapter 15: Smart Pointers
 pub mod chapter_fifteen;
 
+//--- Chapter 17: OOP
+pub mod chapter_seventeen;
+
 
 fn main() {
     //-- Chapter 5: Structs
@@ -117,4 +120,8 @@ fn main() {
     // inserting a box in a recursive type definition.
     chapter_fifteen::run_linked_list_ex();
     chapter_fifteen::run_my_box_ex();
+
+    //-- Chapter 16: OOP
+    chapter_seventeen::run_screen_ex();
+    chapter_seventeen::run_states_ex();
 }
