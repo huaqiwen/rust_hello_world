@@ -1,4 +1,3 @@
-#add the first comment line
 #[macro_use(c)]
 extern crate cute;
 
